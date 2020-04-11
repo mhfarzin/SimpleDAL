@@ -1,0 +1,26 @@
+﻿Please set the connectionString in TestMSSqlBaseClass and run script in database
+
+CREATE TABLE [dbo].[Persons](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Name] [nvarchar](max) NULL,
+	[Family] [nvarchar](max) NULL,
+	[Age] [int] NULL,
+	[Gender] [int] NOT NULL,
+ CONSTRAINT [PK_Persons] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+CREATE TABLE [dbo].[Skills](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[PersonId] [nvarchar](max) NULL,
+	[Title] [nvarchar](max) NULL,
+ CONSTRAINT [PK_Skills] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
