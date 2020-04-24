@@ -5,7 +5,9 @@ SimpleDAL is a lightweight library that allows you to quickly create a data acce
 Add a reference to the library from [https://www.nuget.org/packages/SimpleDAL/](https://www.nuget.org/packages/SimpleDAL/)
 
 ## Getting Start
-First create a class for each of your tables.
+First create a class for each of your tables.  
+If the class name and table name are not the same, you must use the [table](https://github.com/mhfarzin/SimpleDAL#table) Attribute.
+
 ```
 public enum Gender
 {

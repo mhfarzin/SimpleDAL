@@ -9,8 +9,9 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <RepositoryUrl></RepositoryUrl>
     <RepositoryType />
-    <PackageTags>unit of work, repository, data access layer, read from database</PackageTags>
+    <PackageTags>UnitOfWork, Repository, DataAccessLayer</PackageTags>
     <PackageProjectUrl>https://github.com/mhfarzin/SimpleDAL</PackageProjectUrl>
+    <Version>1.0.2</Version>
   </PropertyGroup>
 
   <ItemGroup>

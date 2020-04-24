@@ -27,7 +27,7 @@ namespace SimpleDAL
 
         public static bool CheckKeyIsAutoId(PropertyInfo prop)
         {
-            return EntityCache.GetAttribute<KeyAttribute>(prop).AutoIdentity;
+            return EntityCache.GetAttribute<KeyAttribute>(prop)?.AutoIdentity ?? true;
         }
 
         public static string All<TEntity>() =>
