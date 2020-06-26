@@ -1,40 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Data.Common;
 
 namespace SimpleDAL
 {
-    public class UnitOfWork : IUnitOfWork, IDisposable
+    public class UnitOfWork : IDisposable
     {
         private readonly Provider _provider;
-        private readonly IDbConnection _dbConnection;
-        private readonly IUnitOfWork _unitOfWork;
-
+        private readonly DbConnection _dbConnection;
+  
         public UnitOfWork(string connectionString, Provider provider)
         {
             _provider = provider;
 
-            switch (provider)
-            {
-                case Provider.SqlServer:
-                    _dbConnection = new SqlConnection(connectionString);
-                    break;
-                default:
-                    throw new Exception("Provider Unknow");
-            };
-
-            switch (provider)
-            {
-                case Provider.SqlServer: 
-                    _unitOfWork = new SqlUnitOfWork(_dbConnection as SqlConnection); 
-                    break;
-                default:
-                    throw new Exception("Provider Unknow");
-            };
+            _dbConnection = ConnetionFactory.GetConnection(provider, connectionString);
 
             var repositories = this.GetType()
                .GetProperties()
@@ -61,19 +44,63 @@ namespace SimpleDAL
             return false;
         }
 
-        public IEnumerable<TEntity> RawSqlQuery<TEntity>(string query, object param = default, Transaction transaction = default) where TEntity : class, new()
+        public IEnumerable<TEntity> RawQuery<TEntity>(string query, object param = default, Transaction transaction = default) where TEntity : class, new()
         {
-            return _unitOfWork.RawSqlQuery<TEntity>(query, param, transaction);
+            using (var command = CommandDefinition.GetCommand(provider: _provider, connection: _dbConnection, commandText: query, param: param, transaction: transaction))
+            {
+                return CommandExecuter.ExecuteQuery<TEntity>(_dbConnection, command);
+            }
         }
 
-        public async Task<IEnumerable<TEntity>> RawSqlQueryAsync<TEntity>(string query, object param = default, Transaction transaction = default, CancellationToken cancellationToken = default) where TEntity : class, new()
+        public async Task<IEnumerable<TEntity>> RawQueryAsync<TEntity>(string query, object param = default, Transaction transaction = default, CancellationToken cancellationToken = default) where TEntity : class, new()
         {
-            return await _unitOfWork.RawSqlQueryAsync<TEntity>(query, param, transaction, cancellationToken);
+            using (var command = CommandDefinition.GetCommand(provider: _provider, connection: _dbConnection, commandText: query, param: param, transaction: transaction))
+            {
+                return await CommandExecuter.ExecuteQueryAsync<TEntity>(_dbConnection, command, cancellationToken);
+            }
+        }
+
+        public TResult RawScalarQuery<TResult>(string query, object param = default, Transaction transaction = default)
+        {
+            using (var command = CommandDefinition.GetCommand(provider: _provider, connection: _dbConnection, commandText: query, param: param, transaction: transaction))
+            {
+                return (TResult)CommandExecuter.ExecuteScalarQuery(_dbConnection, command);
+            }
+        }
+
+        public async Task<TResult> RawScalarQueryAsync<TResult>(string query, object param = default, Transaction transaction = default, CancellationToken cancellationToken = default)
+        {
+            using (var command = CommandDefinition.GetCommand(provider: _provider, connection: _dbConnection, commandText: query, param: param, transaction: transaction))
+            {
+                return (TResult)(await CommandExecuter.ExecuteScalarQueryAsync(_dbConnection, command, cancellationToken));
+            }
+        }
+
+        public void RawNonQuery(string query, object param = default, Transaction transaction = default)
+        {
+            using (var command = CommandDefinition.GetCommand(provider: _provider, connection: _dbConnection, commandText: query, param: param, transaction: transaction))
+            {
+                CommandExecuter.ExecuteNonQuery(_dbConnection, command);
+            }
+        }
+
+        public async Task RawNonQueryAsync(string query, object param = default, Transaction transaction = default, CancellationToken cancellationToken = default)
+        {
+            using (var command = CommandDefinition.GetCommand(provider: _provider, connection: _dbConnection, commandText: query, param: param, transaction: transaction))
+            {
+                await CommandExecuter.ExecuteNonQueryAsync(_dbConnection, command, cancellationToken);
+            }
         }
 
         public Transaction BeginTransaction()
         {
-            return _unitOfWork.BeginTransaction();
+            _dbConnection.Open();
+            var transaction = new Transaction(_dbConnection.BeginTransaction());
+            transaction.EndTransactionEvent += () =>
+            {
+                if (_dbConnection.State != ConnectionState.Closed) _dbConnection.Close();
+            };
+            return transaction;
         }
 
         public void Dispose()

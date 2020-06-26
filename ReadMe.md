@@ -1,5 +1,5 @@
 # SimpleDAL
-SimpleDAL is a lightweight library that allows you to quickly create a data access layer.
+SimpleDAL is a lightweight library that allows you to quickly create a data access layer. simpledal supports sql server and mysql.
 
 ## Installation
 Add a reference to the library from [https://www.nuget.org/packages/SimpleDAL/](https://www.nuget.org/packages/SimpleDAL/)
@@ -46,7 +46,21 @@ public class MyContext : UnitOfWork
 }
 ```
 
-Now you can connect to the database by making a instance from MyContext class.
+Also, if you want to connect to a mysql database, just set the second parameter to the value of Provider.MySql
+```
+using SimpleDal;
+
+public class MyContext : UnitOfWork
+{
+    public MyContext() : base("your mysql connectionString ...", Provider.MySql)
+    { }
+
+    public Repository<Person> Persons { get; set; }
+    public Repository<Skill> Skills { get; set; }
+}
+```
+
+Finally you can connect to the database by making a instance from MyContext class.
 ```
 var context = new MyContext();
 
@@ -113,6 +127,45 @@ public class Person
 }
 ```
 
+You can also do this when you don't need to store a property in the database.
+```
+using SimpleDal;
+
+public class Person
+{
+    public string Name { get; set; }
+    public string Family { get; set; }
+    [SimpleDAL.Column(Ignore = true)]
+    public string FullName => $"{Name} {Family}";
+    ...
+}
+```
+
+### Binary
+To save a field as a binary, you can easily define its property from byte[].
+```
+public class Images
+{
+    ...
+    public byte[] File { get; set; }
+    ...
+}
+```
+But you may not want the property be defined as byte[] but saved as a byte[]. An example of this is when your database is mysql and you want to save the Guid field (in the mysql, the Guid should be stored as a byte[]). with this feature, your property will automatically be converted to byte[] at the time of storage, and at the time of reading, it will be mapped again.
+
+```
+using SimpleDal;
+
+[SimpleDAL.Table("Courses")]
+public class Course
+{
+    [SimpleDAL.Key(AutoIdentity = false)]
+    [SimpleDAL.Binary]
+    public Guid Id { get; set; }
+    ...
+}
+```
+
 ## Repository
 For each table we can have a repository in the contaxt
 
@@ -152,8 +205,8 @@ context.Persons.Delete(PersonId);
 ```
 
 ## Unit OF Work
-UnitOfWork addition to the Repository, has three other methods. note that the inherited class from UnitOfWork is not thread safe. Therefore, it must be added as a scoped  in IoC container
-### RawSqlQuery And RawSqlQueryAsync
+UnitOfWork addition to the Repository, has some other methods. note that the inherited class from UnitOfWork is not thread safe. Therefore, it must be added as a scoped  in IoC container
+### RawQuery And RawQueryAsync
 You can use this method when you want to make a special query
 ```
 var personsSkills = context.RawSqlQuery<PersonSkill>(
@@ -167,6 +220,16 @@ class PersonSkill
     public string FullName { get; set; }
     public string Skill { get; set; }
 }
+```
+### RawScalarQuery And RawScalarQueryAsync
+You can use this method when you want to make a special scalar query
+```
+var personsCounts = context.RawSqlQuery<int>("SELECT COUNT(*) FROM [Persons];");
+```
+### RawNonQuery And RawNonQueryAsync
+You can use this method when you want to make a special non query
+```
+context.RawNonQuery("DELETE FROM [Persons];");
 ```
 ### BeginTransaction
 If you want to use a transaction, you can do this using this method.

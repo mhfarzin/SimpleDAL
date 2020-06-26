@@ -11,10 +11,11 @@
     <RepositoryType />
     <PackageTags>UnitOfWork, Repository, DataAccessLayer</PackageTags>
     <PackageProjectUrl>https://github.com/mhfarzin/SimpleDAL</PackageProjectUrl>
-    <Version>1.0.2</Version>
+    <Version>2.0.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MySql.Data" Version="8.0.20" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.1" />
   </ItemGroup>
 

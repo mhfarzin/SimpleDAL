@@ -5,8 +5,9 @@ using System.Text;
 namespace SimpleDAL
 {
     [AttributeUsage(AttributeTargets.Property, Inherited = false)]
-    public class KeyAttribute : Attribute
+    public class BinaryAttribute : Attribute
     {
-        public bool AutoIdentity { get; set; } = true;
+        public BinaryAttribute()
+        { }
     }
 }

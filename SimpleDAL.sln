@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.29519.87
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleDal.Test", "SimpleDal.Test\SimpleDal.Test.csproj", "{762C8213-BC28-484E-86C0-AA26D718EA54}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleDAL", "SimpleDAL\SimpleDAL.csproj", "{64CBE42F-E88E-48FF-8315-FD6FF3B2CFCF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleDAL", "SimpleDAL\SimpleDAL.csproj", "{64CBE42F-E88E-48FF-8315-FD6FF3B2CFCF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

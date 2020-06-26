@@ -6,6 +6,7 @@ namespace SimpleDAL
 {
     public enum Provider
     {
-        SqlServer = 1
+        SqlServer = 1,
+        MySql = 2
     }
 }
