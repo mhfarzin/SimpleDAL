@@ -11,6 +11,36 @@ namespace SimpleDal.Test
     public class TestMySqlUnitOfWork
     {
         [Fact]
+        public void Set()
+        {
+            var person = new MySqlPerson
+            {
+                Name = "MohammadHasan",
+                Family = "Farzin",
+                Age = 32,
+                Gender = MySqlGender.Male
+            };
+            using var context = ContextFactory.GetMySqlContext();
+            context.DataBaseTruncate();
+            context.Set<MySqlPerson>().Insert(person);
+            context.Set<MySqlSkill>().Insert(new MySqlSkill
+            {
+                PersonId = person.Id,
+                Title = "HTML/CSS"
+            });
+            context.Set<MySqlSkill>().Insert(new MySqlSkill
+            {
+                PersonId = person.Id,
+                Title = "JavaScript"
+            });
+            var personsSkills = context.RawQuery<MySqlPersonSkill>(@"SELECT CONCAT(`Persons`.`Name` , ' ' , `Persons`.`Family`) AS FullName, 
+                                                                              `Skills`.`Title` AS Skill
+                                                                       FROM `Persons` JOIN `Skills` 
+                                                                       ON `Persons`.`Id` = `Skills`.`PersonId`;");
+            Assert.True(personsSkills.Count() > 0);
+        }
+
+        [Fact]
         public void RawQuery()
         {
             var person = new MySqlPerson

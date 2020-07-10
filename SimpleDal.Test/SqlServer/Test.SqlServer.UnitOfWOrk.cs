@@ -11,6 +11,36 @@ namespace SimpleDal.Test
     public class TestSqlServerUnitOfWork 
     {
         [Fact]
+        public void Set()
+        {
+            var person = new SqlServerPerson
+            {
+                Name = "MohammadHasan",
+                Family = "Farzin",
+                Age = 32,
+                Gender = SqlServerGender.Male
+            };
+            using var context = ContextFactory.GetSqlServerContext();
+            context.DataBaseTruncate();
+            context.Set<SqlServerPerson>().Insert(person);
+            context.Set<SqlServerSkill>().Insert(new SqlServerSkill
+            {
+                PersonId = person.Id,
+                Title = "HTML/CSS"
+            });
+            context.Set<SqlServerSkill>().Insert(new SqlServerSkill
+            {
+                PersonId = person.Id,
+                Title = "JavaScript"
+            });
+            var personsSkills = context.RawQuery<SqlServerPersonSkill>(@"SELECT [Persons].[Name] + ' ' + [Persons].[Family] AS FullName, 
+                                                                              [Skills].[Title] AS Skill
+                                                                       FROM [Persons] JOIN [Skills] 
+                                                                       ON [Persons].[Id] = [Skills].[PersonId];");
+            Assert.True(personsSkills.Count() > 0);
+        }
+
+        [Fact]
         public void RawQuery()
         {
             var person = new SqlServerPerson

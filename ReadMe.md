@@ -206,6 +206,21 @@ context.Persons.Delete(PersonId);
 
 ## Unit OF Work
 UnitOfWork addition to the Repository, has some other methods. note that the inherited class from UnitOfWork is not thread safe. Therefore, it must be added as a scoped  in IoC container
+### Set
+With this command, you can get specify repository by generic parameter class. the following two commands are equal.
+```
+context.Persons.Insert(new Person 
+{
+    Name = ...
+}); 
+```
+```
+context.Set<Person>().Insert(new Person 
+{
+    Name = ...
+}); 
+```
+      
 ### RawQuery And RawQueryAsync
 You can use this method when you want to make a special query
 ```

@@ -7,7 +7,7 @@ using System.Text;
 
 namespace SimpleDAL
 {
-    public static class Mapper<TEntity> where TEntity : class, new()
+    public static class Mapper<TEntity> where TEntity : class
     {
         public static TEntity Map(DbDataReader reader)
         {

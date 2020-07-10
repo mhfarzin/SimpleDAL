@@ -12,7 +12,7 @@ namespace SimpleDAL
 {
     public class CommandExecuter
     {
-        public static IEnumerable<TEntity> ExecuteQuery<TEntity>(DbConnection dbConnection, DbCommand command) where TEntity : class, new()
+        public static IEnumerable<TEntity> ExecuteQuery<TEntity>(DbConnection dbConnection, DbCommand command) where TEntity : class
         {
             var result = new List<TEntity>();
             DbDataReader reader = default;
@@ -34,7 +34,7 @@ namespace SimpleDAL
             return result;
         }
 
-        public static async Task<IEnumerable<TEntity>> ExecuteQueryAsync<TEntity>(DbConnection dbConnection, DbCommand command, CancellationToken cancellationToken) where TEntity : class, new()
+        public static async Task<IEnumerable<TEntity>> ExecuteQueryAsync<TEntity>(DbConnection dbConnection, DbCommand command, CancellationToken cancellationToken) where TEntity : class
         {
             var result = new List<TEntity>();
             DbDataReader reader = default;
@@ -113,7 +113,7 @@ namespace SimpleDAL
         }
 
         public static List<string> GetProperticeWithAddParameters<TEntity>(Provider provider, PropertyInfo key, bool keyIsAutoId, TEntity item, DbCommand command)
-            where TEntity : class, new()
+            where TEntity : class
         {
             var properties = new List<string>();
             EntityCache.GetProperties(item.GetType()).ToList().ForEach(prop =>

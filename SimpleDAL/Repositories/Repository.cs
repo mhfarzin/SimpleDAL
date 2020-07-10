@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace SimpleDAL
 {
-    public class Repository<TEntity> where TEntity : class, new()
+    public class Repository<TEntity> where TEntity : class
     {
         private readonly Provider _provider;
         private readonly DbConnection _dbConnection;
