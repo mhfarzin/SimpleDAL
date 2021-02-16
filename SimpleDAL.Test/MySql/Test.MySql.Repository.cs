@@ -1,17 +1,17 @@
-﻿using System;
+﻿using SimpleDAL;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
-namespace SimpleDal.Test
+namespace SimpleDAL.Test
 {
     [Collection("Sequential")]
-    public class TestMySqlRepositoryAsync
+    public class TestMySqlRepository
     {
         [Fact]
-        public async Task Insert()
+        public void Insert()
         {
             var person = new MySqlPerson
             {
@@ -22,12 +22,12 @@ namespace SimpleDal.Test
             };
             using var context = ContextFactory.GetMySqlContext();
             context.DataBaseTruncate();
-            await context.Persons.InsertAsync(person);
+            context.Persons.Insert(person);
             Assert.True(person.Id > 0);
         }
 
         [Fact]
-        public async Task Update()
+        public void Update()
         {
             var person = new MySqlPerson
             {
@@ -38,32 +38,15 @@ namespace SimpleDal.Test
             };
             using var context = ContextFactory.GetMySqlContext();
             context.DataBaseTruncate();
-            await context.Persons.InsertAsync(person);
+            context.Persons.Insert(person);
             person.Age = 42;
-            await context.Persons.UpdateAsync(person);
-            var changedPerson = await context.Persons.FindAsync(person.Id);
+            context.Persons.Update(person);
+            var changedPerson = context.Persons.Find(person.Id);
             Assert.Equal(42, changedPerson.Age);
         }
 
         [Fact]
-        public async Task All()
-        {
-            var person = new SqlServerPerson
-            {
-                Name = "MohammadHasan",
-                Family = "Farzin",
-                Age = 32,
-                Gender = SqlServerGender.Male
-            };
-            using var context = ContextFactory.GetSqlServerContext();
-            context.DataBaseTruncate();
-            await context.Persons.InsertAsync(person);
-            var findPersons = await context.Persons.AllAsync();
-            Assert.Single(findPersons);
-        }
-
-        [Fact]
-        public async Task Find()
+        public void All()
         {
             var person = new MySqlPerson
             {
@@ -74,13 +57,13 @@ namespace SimpleDal.Test
             };
             using var context = ContextFactory.GetMySqlContext();
             context.DataBaseTruncate();
-            await context.Persons.InsertAsync(person);
-            var findPerson = await context.Persons.FindAsync(person.Id);
-            Assert.NotNull(findPerson);
+            context.Persons.Insert(person);
+            var persons = context.Persons.All();
+            Assert.Single(persons);
         }
 
         [Fact]
-        public async Task Where()
+        public void Find()
         {
             var person = new MySqlPerson
             {
@@ -91,13 +74,13 @@ namespace SimpleDal.Test
             };
             using var context = ContextFactory.GetMySqlContext();
             context.DataBaseTruncate();
-            await context.Persons.InsertAsync(person);
-            var findPerson = await context.Persons.WhereAsync("Id = @id", new { id = person.Id });
+            context.Persons.Insert(person);
+            var findPerson = context.Persons.Find(person.Id);
             Assert.NotNull(findPerson);
         }
 
         [Fact]
-        public async Task Delete()
+        public void Where()
         {
             var person = new MySqlPerson
             {
@@ -108,11 +91,28 @@ namespace SimpleDal.Test
             };
             using var context = ContextFactory.GetMySqlContext();
             context.DataBaseTruncate();
-            await context.Persons.InsertAsync(person);
-            var findPerson = await context.Persons.FindAsync(person.Id);
+            context.Persons.Insert(person);
+            var findPerson = context.Persons.Where("Id = @id", new { id = person.Id });
             Assert.NotNull(findPerson);
-            await context.Persons.DeleteAsync(findPerson.Id);
-            var deletePerson = await context.Persons.FindAsync(findPerson.Id);
+        }
+
+        [Fact]
+        public void Delete()
+        {
+            var person = new MySqlPerson
+            {
+                Name = "MohammadHasan",
+                Family = "Farzin",
+                Age = 32,
+                Gender = MySqlGender.Male
+            };
+            using var context = ContextFactory.GetMySqlContext();
+            context.DataBaseTruncate();
+            context.Persons.Insert(person);
+            var findPerson = context.Persons.Find(person.Id);
+            Assert.NotNull(person);
+            context.Persons.Delete(person.Id);
+            var deletePerson = context.Persons.Find(person.Id);
             Assert.Null(deletePerson);
         }
     }

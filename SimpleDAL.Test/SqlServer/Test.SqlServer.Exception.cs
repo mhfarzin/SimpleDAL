@@ -4,7 +4,7 @@ using System.Data.SqlClient;
 using System.Text;
 using Xunit;
 
-namespace SimpleDal.Test
+namespace SimpleDAL.Test
 {
     [Collection("Sequential")]
     public class TestSqlServerException 

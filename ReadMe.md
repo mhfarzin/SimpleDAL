@@ -1,5 +1,7 @@
 # SimpleDAL
-SimpleDAL is a lightweight library that allows you to quickly create a data access layer. simpledal supports sql server and mysql.
+SimpleDAL is a lightweight library that allows you to quickly create a data access layer. simpledal supports sql server, mysql and sqlite.
+
+![](https://raw.githubusercontent.com/mhfarzin/SimpleDAL/master/SimpleDAL-Logo.png)
 
 ## Installation
 Add a reference to the library from [https://www.nuget.org/packages/SimpleDAL/](https://www.nuget.org/packages/SimpleDAL/)
@@ -53,6 +55,20 @@ using SimpleDal;
 public class MyContext : UnitOfWork
 {
     public MyContext() : base("your mysql connectionString ...", Provider.MySql)
+    { }
+
+    public Repository<Person> Persons { get; set; }
+    public Repository<Skill> Skills { get; set; }
+}
+```
+
+And for sqlite database, just set the second parameter to the value of Provider.SQLite
+```
+using SimpleDal;
+
+public class MyContext : UnitOfWork
+{
+    public MyContext() : base("your sqlite connectionString ...", Provider.SQLite)
     { }
 
     public Repository<Person> Persons { get; set; }
@@ -151,7 +167,7 @@ public class Images
     ...
 }
 ```
-But you may not want the property be defined as byte[] but saved as a byte[]. An example of this is when your database is mysql and you want to save the Guid field (in the mysql, the Guid should be stored as a byte[]). with this feature, your property will automatically be converted to byte[] at the time of storage, and at the time of reading, it will be mapped again.
+But you may not want the property be defined as byte[] but saved as a byte[]. An example of this is when your database is mysql or sqlite and you want to save the Guid field (in the mysql and sqlite, the Guid Can be stored as byte[]). with this feature, your property will automatically be converted to byte[] at the time of storage, and at the time of reading, it will be mapped again.
 
 ```
 using SimpleDal;

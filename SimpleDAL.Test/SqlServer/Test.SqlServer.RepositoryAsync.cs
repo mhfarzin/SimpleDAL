@@ -1,17 +1,17 @@
-﻿using SimpleDAL;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using Xunit;
 
-namespace SimpleDal.Test
+namespace SimpleDAL.Test
 {
     [Collection("Sequential")]
-    public class TestSqlServerRepository
+    public class TestSqlServerRepositoryAsync
     {
         [Fact]
-        public void Insert()
+        public async Task Insert()
         {
             var person = new SqlServerPerson
             {
@@ -22,12 +22,12 @@ namespace SimpleDal.Test
             };
             using var context = ContextFactory.GetSqlServerContext();
             context.DataBaseTruncate();
-            context.Persons.Insert(person);
+            await context.Persons.InsertAsync(person);
             Assert.True(person.Id > 0);
         }
 
         [Fact]
-        public void Update()
+        public async Task Update()
         {
             var person = new SqlServerPerson
             {
@@ -38,15 +38,15 @@ namespace SimpleDal.Test
             };
             using var context = ContextFactory.GetSqlServerContext();
             context.DataBaseTruncate();
-            context.Persons.Insert(person);
+            await context.Persons.InsertAsync(person);
             person.Age = 42;
-            context.Persons.Update(person);
-            var changedPerson = context.Persons.Find(person.Id);
+            await context.Persons.UpdateAsync(person);
+            var changedPerson = await context.Persons.FindAsync(person.Id);
             Assert.Equal(42, changedPerson.Age);
         }
 
         [Fact]
-        public void All()
+        public async Task All()
         {
             var person = new SqlServerPerson
             {
@@ -57,13 +57,13 @@ namespace SimpleDal.Test
             };
             using var context = ContextFactory.GetSqlServerContext();
             context.DataBaseTruncate();
-            context.Persons.Insert(person);
-            var persons = context.Persons.All();
-            Assert.Single(persons);
+            await context.Persons.InsertAsync(person);
+            var findPersons = await context.Persons.AllAsync();
+            Assert.Single(findPersons);
         }
 
         [Fact]
-        public void Find()
+        public async Task Find()
         {
             var person = new SqlServerPerson
             {
@@ -74,13 +74,13 @@ namespace SimpleDal.Test
             };
             using var context = ContextFactory.GetSqlServerContext();
             context.DataBaseTruncate();
-            context.Persons.Insert(person);
-            var findPerson = context.Persons.Find(person.Id);
+            await context.Persons.InsertAsync(person);
+            var findPerson = await context.Persons.FindAsync(person.Id);
             Assert.NotNull(findPerson);
         }
 
         [Fact]
-        public void Where()
+        public async Task Where()
         {
             var person = new SqlServerPerson
             {
@@ -91,13 +91,13 @@ namespace SimpleDal.Test
             };
             using var context = ContextFactory.GetSqlServerContext();
             context.DataBaseTruncate();
-            context.Persons.Insert(person);
-            var findPerson = context.Persons.Where("Id = @id", new { id = person.Id });
+            await context.Persons.InsertAsync(person);
+            var findPerson = await context.Persons.WhereAsync("Id = @id", new { id = person.Id });
             Assert.NotNull(findPerson);
         }
 
         [Fact]
-        public void Delete()
+        public async Task Delete()
         {
             var person = new SqlServerPerson
             {
@@ -108,11 +108,11 @@ namespace SimpleDal.Test
             };
             using var context = ContextFactory.GetSqlServerContext();
             context.DataBaseTruncate();
-            context.Persons.Insert(person);
-            var findPerson = context.Persons.Find(person.Id);
-            Assert.NotNull(person);
-            context.Persons.Delete(person.Id);
-            var deletePerson = context.Persons.Find(person.Id);
+            await context.Persons.InsertAsync(person);
+            var findPerson = await context.Persons.FindAsync(person.Id);
+            Assert.NotNull(findPerson);
+            await context.Persons.DeleteAsync(findPerson.Id);
+            var deletePerson = await context.Persons.FindAsync(findPerson.Id);
             Assert.Null(deletePerson);
         }
     }

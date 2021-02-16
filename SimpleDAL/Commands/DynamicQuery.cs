@@ -35,9 +35,11 @@ namespace SimpleDAL
             switch (provider)
             {
                 case Provider.SqlServer:
-                    return $"SELECT * FROM [{GetTableName(typeof(TEntity))}]";
+                    return $"SELECT * FROM [{GetTableName(typeof(TEntity))}];";
                 case Provider.MySql:
-                    return $"SELECT * FROM `{GetTableName(typeof(TEntity)).ToLower()}`";
+                    return $"SELECT * FROM `{GetTableName(typeof(TEntity)).ToLower()}`;";
+                case Provider.SQLite:
+                    return $"SELECT * FROM [{GetTableName(typeof(TEntity))}];";
                 default:
                     throw new Exception("Provider Unknow");
             }
@@ -48,9 +50,11 @@ namespace SimpleDAL
             switch (provider)
             {
                 case Provider.SqlServer:
-                    return $"SELECT * FROM [{GetTableName(typeof(TEntity))}] WHERE {whereCondition}";
+                    return $"SELECT * FROM [{GetTableName(typeof(TEntity))}] WHERE {whereCondition};";
                 case Provider.MySql:
-                    return $"SELECT * FROM `{GetTableName(typeof(TEntity)).ToLower()}` WHERE {whereCondition}";
+                    return $"SELECT * FROM `{GetTableName(typeof(TEntity)).ToLower()}` WHERE {whereCondition};";
+                case Provider.SQLite:
+                    return $"SELECT * FROM [{GetTableName(typeof(TEntity))}] WHERE {whereCondition};";
                 default:
                     throw new Exception("Provider Unknow");
             }
@@ -61,9 +65,11 @@ namespace SimpleDAL
             switch (provider)
             {
                 case Provider.SqlServer:
-                    return $"SELECT * FROM [{GetTableName(typeof(TEntity))}] WHERE [{key.Name}]=@{key.Name}Parametr";
+                    return $"SELECT * FROM [{GetTableName(typeof(TEntity))}] WHERE [{key.Name}]=@{key.Name}Parametr;";
                 case Provider.MySql:
-                    return $"SELECT * FROM `{GetTableName(typeof(TEntity)).ToLower()}` WHERE `{key.Name.ToLower()}`=@{key.Name}Parametr";
+                    return $"SELECT * FROM `{GetTableName(typeof(TEntity)).ToLower()}` WHERE `{key.Name.ToLower()}`=@{key.Name}Parametr;";
+                case Provider.SQLite:
+                    return $"SELECT * FROM [{GetTableName(typeof(TEntity))}] WHERE [{key.Name}]=@{key.Name}Parametr;";
                 default:
                     throw new Exception("Provider Unknow");
             }
@@ -74,9 +80,11 @@ namespace SimpleDAL
             switch (provider)
             {
                 case Provider.SqlServer:
-                    return $"INSERT INTO [{GetTableName(typeof(TEntity))}] ({string.Join(",", properties.Select(x => $"[{x}]"))}) OUTPUT Inserted.{key.Name} VALUES ({string.Join(",", properties.Select(x => $"@{x}Parametr"))})";
+                    return $"INSERT INTO [{GetTableName(typeof(TEntity))}] ({string.Join(",", properties.Select(x => $"[{x}]"))}) OUTPUT Inserted.{key.Name} VALUES ({string.Join(",", properties.Select(x => $"@{x}Parametr"))});";
                 case Provider.MySql:
                     return $"INSERT INTO `{GetTableName(typeof(TEntity)).ToLower()}` ({string.Join(",", properties.Select(x => $"`{x.ToLower()}`"))}) VALUES ({string.Join(",", properties.Select(x => $"@{x}Parametr"))});SELECT LAST_INSERT_ID();";
+                case Provider.SQLite:
+                    return $"INSERT INTO [{GetTableName(typeof(TEntity))}] ({string.Join(",", properties.Select(x => $"[{x}]"))}) VALUES ({string.Join(",", properties.Select(x => $"@{x}Parametr"))});SELECT seq from sqlite_sequence where name ='{GetTableName(typeof(TEntity))}';";
                 default:
                     throw new Exception("Provider Unknow");
             }
@@ -87,9 +95,11 @@ namespace SimpleDAL
             switch (provider)
             {
                 case Provider.SqlServer:
-                    return $"UPDATE [{GetTableName(typeof(TEntity))}] Set {string.Join(",", properties.Select(x => $"[{x}]=@{x}Parametr"))} WHERE [{key.Name}]={key.GetValue(item)}"; ;
+                    return $"UPDATE [{GetTableName(typeof(TEntity))}] Set {string.Join(",", properties.Select(x => $"[{x}]=@{x}Parametr"))} WHERE [{key.Name}]={key.GetValue(item)};";
                 case Provider.MySql:
-                    return $"UPDATE `{GetTableName(typeof(TEntity)).ToLower()}` Set {string.Join(",", properties.Select(x => $"`{x.ToLower()}`=@{x}Parametr"))} WHERE `{key.Name.ToLower()}`={key.GetValue(item)}"; ;
+                    return $"UPDATE `{GetTableName(typeof(TEntity)).ToLower()}` Set {string.Join(",", properties.Select(x => $"`{x.ToLower()}`=@{x}Parametr"))} WHERE `{key.Name.ToLower()}`={key.GetValue(item)};";
+                case Provider.SQLite:
+                    return $"UPDATE [{GetTableName(typeof(TEntity))}] Set {string.Join(",", properties.Select(x => $"[{x}]=@{x}Parametr"))} WHERE [{key.Name}]={key.GetValue(item)};";
                 default:
                     throw new Exception("Provider Unknow");
             }
@@ -100,9 +110,11 @@ namespace SimpleDAL
             switch (provider)
             {
                 case Provider.SqlServer:
-                    return $"DELETE FROM [{GetTableName(typeof(TEntity))}] WHERE [{key.Name}]=@{key.Name}Parametr";
+                    return $"DELETE FROM [{GetTableName(typeof(TEntity))}] WHERE [{key.Name}]=@{key.Name}Parametr;";
                 case Provider.MySql:
-                    return $"DELETE FROM `{GetTableName(typeof(TEntity)).ToLower()}` WHERE `{key.Name.ToLower()}`=@{key.Name}Parametr";
+                    return $"DELETE FROM `{GetTableName(typeof(TEntity)).ToLower()}` WHERE `{key.Name.ToLower()}`=@{key.Name}Parametr;";
+                case Provider.SQLite:
+                    return $"DELETE FROM `{GetTableName(typeof(TEntity)).ToLower()}` WHERE `{key.Name.ToLower()}`=@{key.Name}Parametr;";
                 default:
                     throw new Exception("Provider Unknow");
             }

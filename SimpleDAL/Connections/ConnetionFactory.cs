@@ -1,7 +1,8 @@
-﻿using MySql.Data.MySqlClient;
-using System;
+﻿using System;
 using System.Data.Common;
 using System.Data.SqlClient;
+using System.Data.SQLite;
+using MySql.Data.MySqlClient;
 
 namespace SimpleDAL
 {
@@ -15,6 +16,8 @@ namespace SimpleDAL
                     return new SqlConnection(connectionString);
                 case Provider.MySql:
                     return new MySqlConnection(connectionString);
+                case Provider.SQLite:
+                    return new SQLiteConnection(connectionString);
                 default:
                     throw new Exception("Provider Unknow");
             };

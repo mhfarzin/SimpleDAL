@@ -5,22 +5,22 @@ using System.Linq;
 using System.Text;
 using Xunit;
 
-namespace SimpleDal.Test
+namespace SimpleDAL.Test
 {
     [Collection("Sequential")]
-    public class TestMySqlRepository
+    public class TestSqlServerRepository
     {
         [Fact]
         public void Insert()
         {
-            var person = new MySqlPerson
+            var person = new SqlServerPerson
             {
                 Name = "MohammadHasan",
                 Family = "Farzin",
                 Age = 32,
-                Gender = MySqlGender.Male
+                Gender = SqlServerGender.Male
             };
-            using var context = ContextFactory.GetMySqlContext();
+            using var context = ContextFactory.GetSqlServerContext();
             context.DataBaseTruncate();
             context.Persons.Insert(person);
             Assert.True(person.Id > 0);
@@ -29,14 +29,14 @@ namespace SimpleDal.Test
         [Fact]
         public void Update()
         {
-            var person = new MySqlPerson
+            var person = new SqlServerPerson
             {
                 Name = "MohammadHasan",
                 Family = "Farzin",
                 Age = 32,
-                Gender = MySqlGender.Male
+                Gender = SqlServerGender.Male
             };
-            using var context = ContextFactory.GetMySqlContext();
+            using var context = ContextFactory.GetSqlServerContext();
             context.DataBaseTruncate();
             context.Persons.Insert(person);
             person.Age = 42;
@@ -48,14 +48,14 @@ namespace SimpleDal.Test
         [Fact]
         public void All()
         {
-            var person = new MySqlPerson
+            var person = new SqlServerPerson
             {
                 Name = "MohammadHasan",
                 Family = "Farzin",
                 Age = 32,
-                Gender = MySqlGender.Male
+                Gender = SqlServerGender.Male
             };
-            using var context = ContextFactory.GetMySqlContext();
+            using var context = ContextFactory.GetSqlServerContext();
             context.DataBaseTruncate();
             context.Persons.Insert(person);
             var persons = context.Persons.All();
@@ -65,14 +65,14 @@ namespace SimpleDal.Test
         [Fact]
         public void Find()
         {
-            var person = new MySqlPerson
+            var person = new SqlServerPerson
             {
                 Name = "MohammadHasan",
                 Family = "Farzin",
                 Age = 32,
-                Gender = MySqlGender.Male
+                Gender = SqlServerGender.Male
             };
-            using var context = ContextFactory.GetMySqlContext();
+            using var context = ContextFactory.GetSqlServerContext();
             context.DataBaseTruncate();
             context.Persons.Insert(person);
             var findPerson = context.Persons.Find(person.Id);
@@ -82,14 +82,14 @@ namespace SimpleDal.Test
         [Fact]
         public void Where()
         {
-            var person = new MySqlPerson
+            var person = new SqlServerPerson
             {
                 Name = "MohammadHasan",
                 Family = "Farzin",
                 Age = 32,
-                Gender = MySqlGender.Male
+                Gender = SqlServerGender.Male
             };
-            using var context = ContextFactory.GetMySqlContext();
+            using var context = ContextFactory.GetSqlServerContext();
             context.DataBaseTruncate();
             context.Persons.Insert(person);
             var findPerson = context.Persons.Where("Id = @id", new { id = person.Id });
@@ -99,14 +99,14 @@ namespace SimpleDal.Test
         [Fact]
         public void Delete()
         {
-            var person = new MySqlPerson
+            var person = new SqlServerPerson
             {
                 Name = "MohammadHasan",
                 Family = "Farzin",
                 Age = 32,
-                Gender = MySqlGender.Male
+                Gender = SqlServerGender.Male
             };
-            using var context = ContextFactory.GetMySqlContext();
+            using var context = ContextFactory.GetSqlServerContext();
             context.DataBaseTruncate();
             context.Persons.Insert(person);
             var findPerson = context.Persons.Find(person.Id);

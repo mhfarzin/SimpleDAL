@@ -3,13 +3,13 @@ using System;
 using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
+using System.Data.SQLite;
 using System.Linq;
 
 namespace SimpleDAL
 {
     internal class CommandDefinition
     {
-
         public static DbCommand GetCommand(Provider provider, IDbConnection connection, string commandText = default, string key = default, object id = default, object param = default, Transaction transaction = default)
         {
             switch (provider)
@@ -18,6 +18,8 @@ namespace SimpleDAL
                     return GetCommand(connection as SqlConnection, commandText, key, id, param, transaction);
                 case Provider.MySql:
                     return GetCommand(connection as MySqlConnection, commandText, key, id, param, transaction);
+                case Provider.SQLite:
+                    return GetCommand(connection as SQLiteConnection, commandText, key, id, param, transaction);
                 default:
                     throw new Exception("Provider Unknow");
             }
@@ -32,6 +34,9 @@ namespace SimpleDAL
                     break;
                 case Provider.MySql:
                     (dbCommand as MySqlCommand).Parameters.AddWithValue(name, value);
+                    break;
+                case Provider.SQLite:
+                    (dbCommand as SQLiteCommand).Parameters.AddWithValue(name, value);
                     break;
                 default:
                     throw new Exception("Provider Unknow");
@@ -99,6 +104,39 @@ namespace SimpleDAL
             if (transaction != default)
             {
                 command.Transaction = transaction.Get() as MySqlTransaction;
+            }
+
+            return command;
+        }
+
+        private static SQLiteCommand GetCommand(SQLiteConnection connection, string commandText = default, string key = default, object id = default, object param = default, Transaction transaction = default)
+        {
+            SQLiteCommand command = new SQLiteCommand()
+            {
+                Connection = connection
+            };
+
+            if (!string.IsNullOrEmpty(commandText))
+            {
+                command.CommandText = commandText;
+            }
+
+            if (key != default && id != default)
+            {
+                command.Parameters.AddWithValue($"@{key}Parametr", id);
+            }
+
+            if (param != default)
+            {
+                param.GetType().GetProperties().ToList().ForEach(prop =>
+                {
+                    command.Parameters.AddWithValue($"@{prop.Name}", prop.GetValue(param));
+                });
+            }
+
+            if (transaction != default)
+            {
+                command.Transaction = transaction.Get() as SQLiteTransaction;
             }
 
             return command;

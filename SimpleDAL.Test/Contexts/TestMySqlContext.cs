@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace SimpleDal.Test
+namespace SimpleDAL.Test
 {
     public class TestMySqlContext : SimpleDAL.UnitOfWork
     {

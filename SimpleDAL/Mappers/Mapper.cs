@@ -30,9 +30,25 @@ namespace SimpleDAL
                 if (rowFields[propName] is DBNull)
                     return;
 
-                object value = probBinary == default
-                    ? rowFields[propName]
-                    : (rowFields[propName] as byte[]).Deserialize<object>();
+                var safeType = Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType;
+                object value = default;
+
+                if (probBinary != default)
+                {
+                    value = (rowFields[propName] as byte[]).Deserialize<object>(); ;
+                }
+                else if (safeType.IsEnum)
+                {
+                    value = Enum.Parse(safeType, rowFields[propName]?.ToString());
+                }
+                else if (safeType.IsValueType || safeType == typeof(string))
+                {
+                    value = Convert.ChangeType(rowFields[propName], safeType);
+                }
+                else
+                {
+                    value = rowFields[propName];
+                }
 
                 if (value == default)
                     return;

@@ -1,7 +1,6 @@
 ﻿Please set the connectionStrings in ContextFactory and run script in database
 
---------------------------------- Sql Server ---------------------------------
-
+--------------------------------- SqlServer ---------------------------------
 CREATE TABLE [dbo].[Persons](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[Name] [nvarchar](max) NULL,
@@ -34,8 +33,7 @@ CREATE TABLE [dbo].[Skills](
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 
---------------------------------- Mysql ---------------------------------
-
+--------------------------------- MySql ---------------------------------
 CREATE TABLE `persons` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(45) DEFAULT NULL,
@@ -57,5 +55,29 @@ CREATE TABLE `skills` (
   `title` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=193 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+--------------------------------- SQLite ---------------------------------
+CREATE TABLE Persons (
+  Id INTEGER PRIMARY KEY AUTOINCREMENT,
+  Name VARCHAR(255),
+  Family VARCHAR(255),
+  Age VARCHAR(255),
+  Gender INTEGER NOT NULL
+);
+
+CREATE TABLE Courses (
+  Id INTEGER PRIMARY KEY AUTOINCREMENT,
+  Title VARCHAR(255)
+);
+
+CREATE TABLE Skills (
+  Id INTEGER PRIMARY KEY AUTOINCREMENT,
+  personid VARCHAR(255),
+  Title VARCHAR(255)
+);
+
+
+
 
 

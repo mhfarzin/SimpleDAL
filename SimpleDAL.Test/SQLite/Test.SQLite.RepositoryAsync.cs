@@ -5,22 +5,22 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace SimpleDal.Test
+namespace SimpleDAL.Test
 {
     [Collection("Sequential")]
-    public class TestSqlServerRepositoryAsync
+    public class TestSQLiteRepositoryAsync
     {
         [Fact]
         public async Task Insert()
         {
-            var person = new SqlServerPerson
+            var person = new SQLitePerson
             {
                 Name = "MohammadHasan",
                 Family = "Farzin",
                 Age = 32,
-                Gender = SqlServerGender.Male
+                Gender = SQLiteGender.Male
             };
-            using var context = ContextFactory.GetSqlServerContext();
+            using var context = ContextFactory.GetSqlLiteContext();
             context.DataBaseTruncate();
             await context.Persons.InsertAsync(person);
             Assert.True(person.Id > 0);
@@ -29,14 +29,14 @@ namespace SimpleDal.Test
         [Fact]
         public async Task Update()
         {
-            var person = new SqlServerPerson
+            var person = new SQLitePerson
             {
                 Name = "MohammadHasan",
                 Family = "Farzin",
                 Age = 32,
-                Gender = SqlServerGender.Male
+                Gender = SQLiteGender.Male
             };
-            using var context = ContextFactory.GetSqlServerContext();
+            using var context = ContextFactory.GetSqlLiteContext();
             context.DataBaseTruncate();
             await context.Persons.InsertAsync(person);
             person.Age = 42;
@@ -48,14 +48,14 @@ namespace SimpleDal.Test
         [Fact]
         public async Task All()
         {
-            var person = new SqlServerPerson
+            var person = new SQLitePerson
             {
                 Name = "MohammadHasan",
                 Family = "Farzin",
                 Age = 32,
-                Gender = SqlServerGender.Male
+                Gender = SQLiteGender.Male
             };
-            using var context = ContextFactory.GetSqlServerContext();
+            using var context = ContextFactory.GetSqlLiteContext();
             context.DataBaseTruncate();
             await context.Persons.InsertAsync(person);
             var findPersons = await context.Persons.AllAsync();
@@ -65,14 +65,14 @@ namespace SimpleDal.Test
         [Fact]
         public async Task Find()
         {
-            var person = new SqlServerPerson
+            var person = new SQLitePerson
             {
                 Name = "MohammadHasan",
                 Family = "Farzin",
                 Age = 32,
-                Gender = SqlServerGender.Male
+                Gender = SQLiteGender.Male
             };
-            using var context = ContextFactory.GetSqlServerContext();
+            using var context = ContextFactory.GetSqlLiteContext();
             context.DataBaseTruncate();
             await context.Persons.InsertAsync(person);
             var findPerson = await context.Persons.FindAsync(person.Id);
@@ -82,14 +82,14 @@ namespace SimpleDal.Test
         [Fact]
         public async Task Where()
         {
-            var person = new SqlServerPerson
+            var person = new SQLitePerson
             {
                 Name = "MohammadHasan",
                 Family = "Farzin",
                 Age = 32,
-                Gender = SqlServerGender.Male
+                Gender = SQLiteGender.Male
             };
-            using var context = ContextFactory.GetSqlServerContext();
+            using var context = ContextFactory.GetSqlLiteContext();
             context.DataBaseTruncate();
             await context.Persons.InsertAsync(person);
             var findPerson = await context.Persons.WhereAsync("Id = @id", new { id = person.Id });
@@ -99,14 +99,14 @@ namespace SimpleDal.Test
         [Fact]
         public async Task Delete()
         {
-            var person = new SqlServerPerson
+            var person = new SQLitePerson
             {
                 Name = "MohammadHasan",
                 Family = "Farzin",
                 Age = 32,
-                Gender = SqlServerGender.Male
+                Gender = SQLiteGender.Male
             };
-            using var context = ContextFactory.GetSqlServerContext();
+            using var context = ContextFactory.GetSqlLiteContext();
             context.DataBaseTruncate();
             await context.Persons.InsertAsync(person);
             var findPerson = await context.Persons.FindAsync(person.Id);

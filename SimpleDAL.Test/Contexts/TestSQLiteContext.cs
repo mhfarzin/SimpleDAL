@@ -1,34 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.Text;
+using System;
 
-namespace SimpleDal.Test
+namespace SimpleDAL.Test
 {
-    public class TestSqlServerContext : SimpleDAL.UnitOfWork
+    public class TestSQLiteContext : SimpleDAL.UnitOfWork
     {
-        public TestSqlServerContext(string connectionString) : base(connectionString, SimpleDAL.Provider.SqlServer)
+        public TestSQLiteContext(string connectionString) : base(connectionString, SimpleDAL.Provider.SQLite)
         { }
 
-        public SimpleDAL.Repository<SqlServerPerson> Persons { get; set; }
-        public SimpleDAL.Repository<SqlServerSkill> Skills { get; set; }
-        public SimpleDAL.Repository<SqlServerCourse> Courses { get; set; }
-        public SimpleDAL.Repository<SqlServerCity> Cities { get; set; }
+        public SimpleDAL.Repository<SQLitePerson> Persons { get; set; }
+        public SimpleDAL.Repository<SQLiteSkill> Skills { get; set; }
+        public SimpleDAL.Repository<SQLiteCourse> Courses { get; set; }
+        public SimpleDAL.Repository<SQLiteCity> Cities { get; set; }
 
         public void DataBaseTruncate()
         {
-            RawNonQuery("DELETE FROM [Persons]; DELETE FROM [Skills]; DELETE FROM [Courses];");
+            RawNonQuery("DELETE FROM Persons; DELETE FROM Skills; DELETE FROM Courses;");
         }
     }
 
-    public enum SqlServerGender
+    public enum SQLiteGender
     {
         Male = 1,
         Female = 2
     }
 
     [SimpleDAL.Table("Persons")]
-    public class SqlServerPerson
+    public class SQLitePerson
     {
         [SimpleDAL.Key]
         public int Id { get; set; }
@@ -37,20 +34,21 @@ namespace SimpleDal.Test
         [SimpleDAL.Column(Ignore = true)]
         public string FullName => $"{Name} {Family}";
         public int? Age { get; set; }
-        public SqlServerGender Gender { get; set; }
+        public SQLiteGender Gender { get; set; }
     }
 
     [SimpleDAL.Table("Courses")]
-    public class SqlServerCourse
+    public class SQLiteCourse
     {
         [SimpleDAL.Key(AutoIdentity = false)]
+        [SimpleDAL.Binary]
         public Guid Id { get; set; }
         [SimpleDAL.Column("Title")]
         public string Name { get; set; }
     }
 
     [SimpleDAL.Table("Skills")]
-    public class SqlServerSkill
+    public class SQLiteSkill
     {
         [SimpleDAL.Key]
         public int Id { get; set; }
@@ -59,7 +57,7 @@ namespace SimpleDal.Test
     }
 
     [SimpleDAL.Table("Cities")]
-    public class SqlServerCity
+    public class SQLiteCity
     {
         [SimpleDAL.Key]
         public int Id { get; set; }

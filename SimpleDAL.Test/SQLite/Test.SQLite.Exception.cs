@@ -2,20 +2,21 @@
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Data.SQLite;
 using System.Text;
 using Xunit;
 
-namespace SimpleDal.Test
+namespace SimpleDAL.Test
 {
     [Collection("Sequential")]
-    public class TestMySqlException
+    public class TestSQLiteException
     {
         [Fact]
         public void ThrowException()
         {
-            using var context = ContextFactory.GetMySqlContext();
+            using var context = ContextFactory.GetSqlLiteContext();
             context.DataBaseTruncate();
-            Assert.Throws<MySqlException>(() => context.Cities.All());
+            Assert.Throws<SQLiteException>(() => context.Cities.All());
         }
     }
 }
