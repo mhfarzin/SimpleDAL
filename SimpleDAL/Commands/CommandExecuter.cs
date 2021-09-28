@@ -116,18 +116,18 @@ namespace SimpleDAL
             where TEntity : class
         {
             var properties = new List<string>();
-            EntityCache.GetProperties(item.GetType()).ToList().ForEach(prop =>
+            CacheManager.GetProperties(item.GetType()).ToList().ForEach(prop =>
             {
-                var propName = EntityCache.GetAttribute<ColumnAttribute>(prop)?.Name ?? prop.Name;
+                var propName = CacheManager.GetAttribute<ColumnAttribute>(prop)?.Name ?? prop.Name;
                 if ((propName == key.Name && keyIsAutoId) || prop.GetValue(item) == default)
                     return;
 
-                var propIgnore = EntityCache.GetAttribute<ColumnAttribute>(prop)?.Ignore ?? false;
+                var propIgnore = CacheManager.GetAttribute<ColumnAttribute>(prop)?.Ignore ?? false;
                 if (propIgnore)
                     return;
 
                 properties.Add(propName);
-                var value = EntityCache.GetAttribute<BinaryAttribute>(prop) == default
+                var value = CacheManager.GetAttribute<BinaryAttribute>(prop) == default
                     ? prop.GetValue(item)
                     : prop.GetValue(item).SerializeToByteArray();
                 CommandDefinition.AddParameterWithValue(provider, command, $"@{propName}Parametr", value);

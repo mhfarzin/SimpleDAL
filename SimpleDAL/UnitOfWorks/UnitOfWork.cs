@@ -17,6 +17,8 @@ namespace SimpleDAL
         {
             _provider = provider;
 
+            OnModelCreating(new ModelBuilder());
+
             _dbConnection = ConnetionFactory.GetConnection(provider, connectionString);
 
             var repositories = this.GetType()
@@ -114,6 +116,11 @@ namespace SimpleDAL
                 if (_dbConnection.State != ConnectionState.Closed) _dbConnection.Close();
             };
             return transaction;
+        }
+
+        public virtual void OnModelCreating(ModelBuilder modelBuilder)
+        {
+           
         }
 
         public void Dispose()

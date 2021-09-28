@@ -89,11 +89,17 @@ var persons = context.Persons.All();
 # Documet
 
 
-## Attribute
+## Configuration Models
+You can config your models in two ways
+1) use of attributes
+2) use of flow
+
+below you can see both forms of each config. note that you only need to use one of these two forms.
 
 ### Table
 It is used when you want the table name in the database not to be the same as the class name
 
+if you want use as attribute
 ```
 using SimpleDal;
 
@@ -104,9 +110,27 @@ public class Person
 }
 ```
 
+if you want use as fluent
+```
+using SimpleDal;
+
+public class Person
+{
+    ...
+}
+public class MyContext : UnitOfWork {
+	...
+	public override void OnModelCreating(ModelBuilder modelBuilder)
+	{
+		modelBuilder.Entity<Person>().Table().Name("Persons");
+	}
+}
+```
+
 ### Key
 The table key is used to set key field. AutoIdentity property can also be set to value. If you do not use this attribute, default Id field is a key. The default value of AutoIdentity is also equal to true.
 
+if you want use as attribute
 ```
 using SimpleDal;
 
@@ -117,7 +141,6 @@ public class Person
     ...
 }
 ```
-
 ```
 using SimpleDal;
 
@@ -129,9 +152,29 @@ public class Person
 }
 ```
 
+if you want use as fluent
+```
+using SimpleDal;
+
+public class Person
+{
+	public Guid Id { get; set; }
+    ...
+}
+public class MyContext : UnitOfWork {
+	...
+	public override void OnModelCreating(ModelBuilder modelBuilder)
+	{
+		modelBuilder.Entity<Person>().Key(x => x.Id).AutoIdentity(false);
+	}
+}
+```
+
+
 ### Column
 We use this attribute when the database column name is different from property name
 
+if you want use as attribute
 ```
 using SimpleDal;
 
@@ -149,6 +192,7 @@ using SimpleDal;
 
 public class Person
 {
+	[Column("firstname")]
     public string Name { get; set; }
     public string Family { get; set; }
     [SimpleDAL.Column(Ignore = true)]
@@ -156,6 +200,26 @@ public class Person
     ...
 }
 ```
+if you want use as fluent
+```
+using SimpleDal;
+
+public class Person
+{
+    public string Name { get; set; }
+    public string Family { get; set; }
+    public string FullName => $"{Name} {Family}";
+}
+public class MyContext : UnitOfWork {
+	...
+	public override void OnModelCreating(ModelBuilder modelBuilder)
+	{
+		modelBuilder.Entity<Person>().Column(x=>x.Name).Name("firstname");
+		modelBuilder.Entity<Person>().Column(x=>x.FullName).Ignore();
+	}
+}
+```
+
 
 ### Binary
 To save a field as a binary, you can easily define its property from byte[].
@@ -169,6 +233,7 @@ public class Images
 ```
 But you may not want the property be defined as byte[] but saved as a byte[]. An example of this is when your database is mysql or sqlite and you want to save the Guid field (in the mysql and sqlite, the Guid Can be stored as byte[]). with this feature, your property will automatically be converted to byte[] at the time of storage, and at the time of reading, it will be mapped again.
 
+if you want use as attribute
 ```
 using SimpleDal;
 
@@ -181,6 +246,26 @@ public class Course
     ...
 }
 ```
+if you want use as fluent
+```
+using SimpleDal;
+
+public class Course
+{
+	public Guid Id { get; set; }
+    ...
+}
+public class MyContext : UnitOfWork {
+	...
+	public override void OnModelCreating(ModelBuilder modelBuilder)
+	{
+		modelBuilder.Entity<Course>().Table().Name("Courses");
+		modelBuilder.Entity<Course>().Key(x => x.Id).AutoIdentity(false);
+		modelBuilder.Entity<Course>().Binary(x => x.Id);
+	}
+}
+```
+
 
 ## Repository
 For each table we can have a repository in the contaxt

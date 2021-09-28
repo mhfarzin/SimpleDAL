@@ -1,4 +1,5 @@
 ﻿using SimpleDAL;
+using SimpleDAL.Test.Contexts;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -9,7 +10,7 @@ namespace SimpleDAL.Test
     {
         public const string SqlServerConnectionString = @"Server =.\SQLEXPRESS; Database=SimpleDAL;Trusted_Connection=True;";
         public const string MySqlConnectionString = @"server=localhost;user=root;database=simpledal;port=3306;password=Aa123456";
-        public const string SQLiteConnectionString = @"URI=file:D:\SQLite\SimpleDal.db";
+        public const string SQLiteConnectionString = @"URI=file:E:\SQLite\SimpleDal.db";
 
         public static TestSqlServerContext GetSqlServerContext()
         {
@@ -25,5 +26,11 @@ namespace SimpleDAL.Test
         {
             return new TestSQLiteContext(SQLiteConnectionString);
         }
+
+        public static TestFluentContext GetTestFluentContext()
+        {
+            return new TestFluentContext(SQLiteConnectionString);
+        }
+
     }
 }

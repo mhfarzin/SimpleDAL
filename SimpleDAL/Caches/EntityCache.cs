@@ -52,7 +52,7 @@ namespace SimpleDAL
                 return default;
             }
 
-            return (attribute as T);
+            return attribute as T;
         }
 
         public static T GetAttribute<T>(PropertyInfo propertyInfo) where T: Attribute
@@ -72,7 +72,7 @@ namespace SimpleDAL
                 return default;
             }
 
-            return (attribute as T);
+            return attribute as T;
         }
     }
 }

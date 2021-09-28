@@ -18,11 +18,11 @@ namespace SimpleDAL
         private static TEntity Map(Dictionary<string, object> rowFields)
         {
             TEntity item = Activator.CreateInstance(typeof(TEntity)) as TEntity;
-            EntityCache.GetProperties(item.GetType()).ToList().ForEach(prop =>
+            CacheManager.GetProperties(item.GetType()).ToList().ForEach(prop =>
             {
-                var propName = EntityCache.GetAttribute<ColumnAttribute>(prop)?.Name?.ToLower() ?? prop.Name.ToLower();
-                var propIgnore = EntityCache.GetAttribute<ColumnAttribute>(prop)?.Ignore ?? false;
-                var probBinary = EntityCache.GetAttribute<BinaryAttribute>(prop);
+                var propName = CacheManager.GetAttribute<ColumnAttribute>(prop)?.Name?.ToLower() ?? prop.Name.ToLower();
+                var propIgnore = CacheManager.GetAttribute<ColumnAttribute>(prop)?.Ignore ?? false;
+                var probBinary = CacheManager.GetAttribute<BinaryAttribute>(prop);
 
                 if (propIgnore)
                     return;

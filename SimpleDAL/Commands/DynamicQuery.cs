@@ -11,11 +11,11 @@ namespace SimpleDAL
         {
             PropertyInfo result;
 
-            var properties = EntityCache.GetProperties(type).Where(prop => EntityCache.GetAttribute<KeyAttribute>(prop) != default).ToList();
+            var properties = CacheManager.GetProperties(type).Where(prop => CacheManager.GetAttribute<KeyAttribute>(prop) != default).ToList();
 
             result = properties.Any()
                 ? properties.First()
-                : EntityCache.GetProperties(type).SingleOrDefault(p => p.Name.Equals("Id", StringComparison.OrdinalIgnoreCase));
+                : CacheManager.GetProperties(type).SingleOrDefault(p => p.Name.Equals("Id", StringComparison.OrdinalIgnoreCase));
 
             if (result == default)
             {
@@ -27,7 +27,7 @@ namespace SimpleDAL
 
         public static bool CheckKeyIsAutoId(PropertyInfo prop)
         {
-            return EntityCache.GetAttribute<KeyAttribute>(prop)?.AutoIdentity ?? true;
+            return CacheManager.GetAttribute<KeyAttribute>(prop)?.AutoIdentity ?? true;
         }
 
         public static string All<TEntity>(Provider provider)
@@ -122,7 +122,7 @@ namespace SimpleDAL
 
         private static string GetTableName(Type type)
         {
-            return EntityCache.GetAttribute<TableAttribute>(type)?.Name ?? type.Name;
+            return CacheManager.GetAttribute<TableAttribute>(type)?.Name ?? type.Name;
         }
     }
 }
