@@ -1,3 +1,4 @@
+
 # SimpleDAL
 SimpleDAL is a lightweight library that allows you to quickly create a data access layer. simpledal supports sql server, mysql and sqlite.
 
@@ -17,6 +18,7 @@ public enum Gender
     Female = 2
 }
 
+[Table("Persons")]
 public class Person
 {
     public int Id { get; set; }
@@ -26,6 +28,7 @@ public class Person
     public Gender Gender { get; set; }
 }
 
+[Table("Skills")]
 public class Skill
 {
     public int Id { get; set; }
@@ -34,13 +37,16 @@ public class Skill
 }
 ```
 
-Next you need to create a context class for yourself. This class must have inherited from SimpleDAL UnitOfWork class. We also consider a SimpleDAL Repository class as property for each entity.
+Next you need to create a context class for yourself. This class must have inherited from SimpleDAL UnitOfWork class. We also consider a SimpleDAL Repository class as property for each entity. This class must pass 2 entries to its higher class
+1- The type of connection string
+2-  an instance of the connection
 ```
 using SimpleDal;
 
 public class MyContext : UnitOfWork
 {
-    public MyContext() : base("your sql server connectionString ...", Provider.SqlServer)
+    public MyContext()
+	    : base(Provider.SqlServer, new SqlConnection("your sql server connectionString ..."))
     { }
 
     public Repository<Person> Persons { get; set; }
@@ -48,13 +54,14 @@ public class MyContext : UnitOfWork
 }
 ```
 
-Also, if you want to connect to a mysql database, just set the second parameter to the value of Provider.MySql
+Also, for example if you want to connect to a mysql database, you act as follows
 ```
 using SimpleDal;
 
 public class MyContext : UnitOfWork
 {
-    public MyContext() : base("your mysql connectionString ...", Provider.MySql)
+    public MyContext()
+	    : base(Provider.MySql, new MySqlConnection("your mysql connectionString ..."))
     { }
 
     public Repository<Person> Persons { get; set; }
@@ -62,13 +69,14 @@ public class MyContext : UnitOfWork
 }
 ```
 
-And for sqlite database, just set the second parameter to the value of Provider.SQLite
+And for sqlite database
 ```
 using SimpleDal;
 
 public class MyContext : UnitOfWork
 {
-    public MyContext() : base("your sqlite connectionString ...", Provider.SQLite)
+    public MyContext()
+	    : base(Provider.SQLite, new SqliteConnection(SQLite))
     { }
 
     public Repository<Person> Persons { get; set; }

@@ -1,8 +1,4 @@
-﻿using SimpleDAL;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System;
 using Xunit;
 
 namespace SimpleDAL.Test

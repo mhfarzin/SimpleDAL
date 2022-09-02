@@ -1,8 +1,4 @@
-﻿using SimpleDAL;
-using SimpleDAL.Test.Contexts;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using SimpleDAL.Test.Contexts;
 
 namespace SimpleDAL.Test
 {

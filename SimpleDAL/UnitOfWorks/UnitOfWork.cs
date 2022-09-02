@@ -11,15 +11,16 @@ namespace SimpleDAL
     public class UnitOfWork : IDisposable
     {
         private readonly Provider _provider;
-        private readonly DbConnection _dbConnection;
+
+        protected readonly DbConnection _dbConnection;
   
-        public UnitOfWork(string connectionString, Provider provider)
+        public UnitOfWork(Provider provider, DbConnection dbConnection)
         {
             _provider = provider;
 
-            OnModelCreating(new ModelBuilder());
+            _dbConnection = dbConnection;
 
-            _dbConnection = ConnetionFactory.GetConnection(provider, connectionString);
+            OnModelCreating(new ModelBuilder());
 
             var repositories = this.GetType()
                .GetProperties()
@@ -61,7 +62,7 @@ namespace SimpleDAL
 
         public IEnumerable<TEntity> RawQuery<TEntity>(string query, object param = default, Transaction transaction = default) where TEntity : class
         {
-            using (var command = CommandDefinition.GetCommand(provider: _provider, connection: _dbConnection, commandText: query, param: param, transaction: transaction))
+            using (var command = CommandDefinition.GetCommand(connection: _dbConnection, commandText: query, param: param, transaction: transaction))
             {
                 return CommandExecuter.ExecuteQuery<TEntity>(_dbConnection, command);
             }
@@ -69,7 +70,7 @@ namespace SimpleDAL
 
         public async Task<IEnumerable<TEntity>> RawQueryAsync<TEntity>(string query, object param = default, Transaction transaction = default, CancellationToken cancellationToken = default) where TEntity : class
         {
-            using (var command = CommandDefinition.GetCommand(provider: _provider, connection: _dbConnection, commandText: query, param: param, transaction: transaction))
+            using (var command = CommandDefinition.GetCommand(connection: _dbConnection, commandText: query, param: param, transaction: transaction))
             {
                 return await CommandExecuter.ExecuteQueryAsync<TEntity>(_dbConnection, command, cancellationToken);
             }
@@ -77,7 +78,7 @@ namespace SimpleDAL
 
         public TResult RawScalarQuery<TResult>(string query, object param = default, Transaction transaction = default)
         {
-            using (var command = CommandDefinition.GetCommand(provider: _provider, connection: _dbConnection, commandText: query, param: param, transaction: transaction))
+            using (var command = CommandDefinition.GetCommand(connection: _dbConnection, commandText: query, param: param, transaction: transaction))
             {
                 return (TResult)CommandExecuter.ExecuteScalarQuery(_dbConnection, command);
             }
@@ -85,7 +86,7 @@ namespace SimpleDAL
 
         public async Task<TResult> RawScalarQueryAsync<TResult>(string query, object param = default, Transaction transaction = default, CancellationToken cancellationToken = default)
         {
-            using (var command = CommandDefinition.GetCommand(provider: _provider, connection: _dbConnection, commandText: query, param: param, transaction: transaction))
+            using (var command = CommandDefinition.GetCommand(connection: _dbConnection, commandText: query, param: param, transaction: transaction))
             {
                 return (TResult)(await CommandExecuter.ExecuteScalarQueryAsync(_dbConnection, command, cancellationToken));
             }
@@ -93,7 +94,7 @@ namespace SimpleDAL
 
         public void RawNonQuery(string query, object param = default, Transaction transaction = default)
         {
-            using (var command = CommandDefinition.GetCommand(provider: _provider, connection: _dbConnection, commandText: query, param: param, transaction: transaction))
+            using (var command = CommandDefinition.GetCommand(connection: _dbConnection, commandText: query, param: param, transaction: transaction))
             {
                 CommandExecuter.ExecuteNonQuery(_dbConnection, command);
             }
@@ -101,7 +102,7 @@ namespace SimpleDAL
 
         public async Task RawNonQueryAsync(string query, object param = default, Transaction transaction = default, CancellationToken cancellationToken = default)
         {
-            using (var command = CommandDefinition.GetCommand(provider: _provider, connection: _dbConnection, commandText: query, param: param, transaction: transaction))
+            using (var command = CommandDefinition.GetCommand(connection: _dbConnection, commandText: query, param: param, transaction: transaction))
             {
                 await CommandExecuter.ExecuteNonQueryAsync(_dbConnection, command, cancellationToken);
             }

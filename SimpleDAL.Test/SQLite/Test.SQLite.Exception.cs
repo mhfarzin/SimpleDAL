@@ -1,9 +1,4 @@
-﻿using MySql.Data.MySqlClient;
-using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.Data.SQLite;
-using System.Text;
+﻿using Microsoft.Data.Sqlite;
 using Xunit;
 
 namespace SimpleDAL.Test
@@ -16,7 +11,7 @@ namespace SimpleDAL.Test
         {
             using var context = ContextFactory.GetSqlLiteContext();
             context.DataBaseTruncate();
-            Assert.Throws<SQLiteException>(() => context.Cities.All());
+            Assert.Throws<SqliteException>(() => context.Cities.All());
         }
     }
 }

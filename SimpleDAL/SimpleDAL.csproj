@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -11,16 +11,13 @@
     <RepositoryType />
     <PackageTags>UnitOfWork, Repository, DataAccessLayer</PackageTags>
     <PackageProjectUrl>https://github.com/mhfarzin/SimpleDAL</PackageProjectUrl>
-    <Version>3.1.0</Version>
+    <Version>4.0.0</Version>
     <PackageIcon>SimpleDAL-Logo.png</PackageIcon>
     <AssemblyVersion>3.0.0.0</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MySql.Data" Version="8.0.20" />
     <PackageReference Include="System.Collections" Version="4.3.0" />
-    <PackageReference Include="System.Data.SqlClient" Version="4.8.1" />
-    <PackageReference Include="System.Data.SQLite" Version="1.0.113.7" />
   </ItemGroup>
 
   <ItemGroup>

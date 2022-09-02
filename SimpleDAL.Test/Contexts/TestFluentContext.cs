@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Microsoft.Data.Sqlite;
+using System;
 
 namespace SimpleDAL.Test.Contexts
 {
     public class TestFluentContext : SimpleDAL.UnitOfWork
     {
-        public TestFluentContext(string connectionString) : base(connectionString, SimpleDAL.Provider.SQLite)
+        public TestFluentContext(string connectionString) : base(SimpleDAL.Provider.SQLite, new SqliteConnection(connectionString))
         { }
 
         public SimpleDAL.Repository<FulentPerson> Persons { get; set; }

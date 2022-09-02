@@ -1,13 +1,11 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SimpleDAL.Test
 {
     public class TestMySqlContext : SimpleDAL.UnitOfWork
     {
-        public TestMySqlContext(string connectionString) : base(connectionString, SimpleDAL.Provider.MySql)
+        public TestMySqlContext(string connectionString) : base(SimpleDAL.Provider.MySql, new MySqlConnection(connectionString))
         { }
 
         public SimpleDAL.Repository<MySqlPerson> Persons { get; set; }

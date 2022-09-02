@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.Common;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -28,7 +25,7 @@ namespace SimpleDAL
 
         public IEnumerable<TEntity> All(Transaction transaction = default)
         {
-            using (var command = CommandDefinition.GetCommand(provider: _provider, connection: _dbConnection, commandText: DynamicQuery.All<TEntity>(_provider), transaction: transaction))
+            using (var command = CommandDefinition.GetCommand(connection: _dbConnection, commandText: DynamicQuery.All<TEntity>(_provider), transaction: transaction))
             {
                 return CommandExecuter.ExecuteQuery<TEntity>(_dbConnection, command);
             }
@@ -36,7 +33,7 @@ namespace SimpleDAL
 
         public async Task<IEnumerable<TEntity>> AllAsync(Transaction transaction = default, CancellationToken cancellationToken = default)
         {
-            using (var command = CommandDefinition.GetCommand(provider: _provider, connection: _dbConnection, commandText: DynamicQuery.All<TEntity>(_provider), transaction: transaction))
+            using (var command = CommandDefinition.GetCommand(connection: _dbConnection, commandText: DynamicQuery.All<TEntity>(_provider), transaction: transaction))
             {
                 return await CommandExecuter.ExecuteQueryAsync<TEntity>(_dbConnection, command, cancellationToken);
             }
@@ -44,7 +41,7 @@ namespace SimpleDAL
 
         public TEntity Find(object id, Transaction transaction = default)
         {
-            using (var command = CommandDefinition.GetCommand(provider: _provider, connection: _dbConnection, commandText: DynamicQuery.Find<TEntity>(_provider, _key), key: _key.Name, id: id, transaction: transaction))
+            using (var command = CommandDefinition.GetCommand(connection: _dbConnection, commandText: DynamicQuery.Find<TEntity>(_provider, _key), key: _key.Name, id: id, transaction: transaction))
             {
                 return CommandExecuter.ExecuteQuery<TEntity>(_dbConnection, command).FirstOrDefault();
             }
@@ -52,7 +49,7 @@ namespace SimpleDAL
 
         public async Task<TEntity> FindAsync(object id, Transaction transaction = default, CancellationToken cancellationToken = default)
         {
-            using (var command = CommandDefinition.GetCommand(provider: _provider, connection: _dbConnection, commandText: DynamicQuery.Find<TEntity>(_provider, _key), key: _key.Name, id: id, transaction: transaction))
+            using (var command = CommandDefinition.GetCommand(connection: _dbConnection, commandText: DynamicQuery.Find<TEntity>(_provider, _key), key: _key.Name, id: id, transaction: transaction))
             {
                 return (await CommandExecuter.ExecuteQueryAsync<TEntity>(_dbConnection, command, cancellationToken)).FirstOrDefault();
             }
@@ -60,7 +57,7 @@ namespace SimpleDAL
 
         public IEnumerable<TEntity> Where(string whereCondition, object param = default, Transaction transaction = default)
         {
-            using (var command = CommandDefinition.GetCommand(provider: _provider, connection: _dbConnection, commandText: DynamicQuery.Where<TEntity>(_provider, whereCondition), param: param, transaction: transaction))
+            using (var command = CommandDefinition.GetCommand(connection: _dbConnection, commandText: DynamicQuery.Where<TEntity>(_provider, whereCondition), param: param, transaction: transaction))
             {
                 return CommandExecuter.ExecuteQuery<TEntity>(_dbConnection, command);
             }
@@ -68,7 +65,7 @@ namespace SimpleDAL
 
         public async Task<IEnumerable<TEntity>> WhereAsync(string whereCondition, object param = default, Transaction transaction = default, CancellationToken cancellationToken = default)
         {
-            using (var command = CommandDefinition.GetCommand(provider: _provider, connection: _dbConnection, commandText: DynamicQuery.Where<TEntity>(_provider, whereCondition), param: param, transaction: transaction))
+            using (var command = CommandDefinition.GetCommand(connection: _dbConnection, commandText: DynamicQuery.Where<TEntity>(_provider, whereCondition), param: param, transaction: transaction))
             {
                 return await CommandExecuter.ExecuteQueryAsync<TEntity>(_dbConnection, command, cancellationToken);
             }
@@ -76,7 +73,7 @@ namespace SimpleDAL
 
         public void Insert(TEntity item, Transaction transaction = default)
         {
-            using (var command = CommandDefinition.GetCommand(provider: _provider, connection: _dbConnection, transaction: transaction))
+            using (var command = CommandDefinition.GetCommand(connection: _dbConnection, transaction: transaction))
             {
                 var properties = CommandExecuter.GetProperticeWithAddParameters<TEntity>(_provider, _key, _keyIsAutoId, item, command);
                 command.CommandText = DynamicQuery.Insert(_provider, _key, properties, item);
@@ -91,7 +88,7 @@ namespace SimpleDAL
 
         public async Task InsertAsync(TEntity item, Transaction transaction = default, CancellationToken cancellationToken = default)
         {
-            using (var command = CommandDefinition.GetCommand(provider: _provider, connection: _dbConnection, transaction: transaction))
+            using (var command = CommandDefinition.GetCommand(connection: _dbConnection, transaction: transaction))
             {
                 var properties = CommandExecuter.GetProperticeWithAddParameters<TEntity>(_provider, _key, _keyIsAutoId, item, command);
                 command.CommandText = DynamicQuery.Insert(_provider, _key, properties, item);
@@ -106,7 +103,7 @@ namespace SimpleDAL
 
         public void Update(TEntity item, Transaction transaction = default)
         {
-            using (var command = CommandDefinition.GetCommand(provider: _provider, connection: _dbConnection))
+            using (var command = CommandDefinition.GetCommand(connection: _dbConnection))
             {
                 var properties = CommandExecuter.GetProperticeWithAddParameters<TEntity>(_provider, _key, _keyIsAutoId, item, command);
                 command.CommandText = DynamicQuery.Update(_provider, _key, properties, item);
@@ -116,7 +113,7 @@ namespace SimpleDAL
 
         public async Task UpdateAsync(TEntity item, Transaction transaction = default, CancellationToken cancellationToken = default)
         {
-            using (var command = CommandDefinition.GetCommand(provider: _provider, connection: _dbConnection, transaction: transaction))
+            using (var command = CommandDefinition.GetCommand(connection: _dbConnection, transaction: transaction))
             {
                 var properties = CommandExecuter.GetProperticeWithAddParameters<TEntity>(_provider, _key, _keyIsAutoId, item, command);
                 command.CommandText = DynamicQuery.Update(_provider, _key, properties, item);
@@ -126,7 +123,7 @@ namespace SimpleDAL
 
         public void Delete(object id, Transaction transaction = default)
         {
-            using (var command = CommandDefinition.GetCommand(provider: _provider, connection: _dbConnection, commandText: DynamicQuery.Delete<TEntity>(_provider, _key), key: _key.Name, id: id, transaction: transaction))
+            using (var command = CommandDefinition.GetCommand(connection: _dbConnection, commandText: DynamicQuery.Delete<TEntity>(_provider, _key), key: _key.Name, id: id, transaction: transaction))
             {
                 CommandExecuter.ExecuteNonQuery(_dbConnection, command);
             }
@@ -134,7 +131,7 @@ namespace SimpleDAL
 
         public async Task DeleteAsync(object id, Transaction transaction = default, CancellationToken cancellationToken = default)
         {
-            using (var command = CommandDefinition.GetCommand(provider: _provider, connection: _dbConnection, commandText: DynamicQuery.Delete<TEntity>(_provider, _key), _key.Name, id: id, transaction: transaction))
+            using (var command = CommandDefinition.GetCommand(connection: _dbConnection, commandText: DynamicQuery.Delete<TEntity>(_provider, _key), _key.Name, id: id, transaction: transaction))
             {
                 await CommandExecuter.ExecuteNonQueryAsync(_dbConnection, command, cancellationToken);
             }

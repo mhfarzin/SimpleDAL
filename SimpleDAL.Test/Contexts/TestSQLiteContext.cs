@@ -1,10 +1,11 @@
+using Microsoft.Data.Sqlite;
 using System;
 
 namespace SimpleDAL.Test
 {
     public class TestSQLiteContext : SimpleDAL.UnitOfWork
     {
-        public TestSQLiteContext(string connectionString) : base(connectionString, SimpleDAL.Provider.SQLite)
+        public TestSQLiteContext(string connectionString) : base(SimpleDAL.Provider.SQLite, new SqliteConnection(connectionString))
         { }
 
         public SimpleDAL.Repository<SQLitePerson> Persons { get; set; }

@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -130,7 +128,7 @@ namespace SimpleDAL
                 var value = CacheManager.GetAttribute<BinaryAttribute>(prop) == default
                     ? prop.GetValue(item)
                     : prop.GetValue(item).SerializeToByteArray();
-                CommandDefinition.AddParameterWithValue(provider, command, $"@{propName}Parametr", value);
+                CommandDefinition.AddParameterWithValue(command, $"@{propName}Parametr", value);
             });
             return properties;
         }

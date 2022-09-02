@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Text;
 
 namespace SimpleDAL.Test
 {
     public class TestSqlServerContext : SimpleDAL.UnitOfWork
     {
-        public TestSqlServerContext(string connectionString) : base(connectionString, SimpleDAL.Provider.SqlServer)
+        public TestSqlServerContext(string connectionString) : base(Provider.SqlServer, new SqlConnection(connectionString))
         { }
 
         public SimpleDAL.Repository<SqlServerPerson> Persons { get; set; }
